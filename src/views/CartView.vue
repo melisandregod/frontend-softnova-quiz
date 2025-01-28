@@ -4,10 +4,13 @@ import UserLayout from "@/layouts/UserLayout.vue";
 import RightIcon from "@/components/icons/Right.vue";
 import CloseIcon from "@/components/icons/Close.vue";
 
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 import { useUserCartStore } from "@/stores/cart";
 
+
+const showModal = ref(false);
+const showToast = ref(false);
 const userCartStore = useUserCartStore();
 const router = useRouter();
 
@@ -25,9 +28,34 @@ const removeItemInCart = (index) => {
 //post
 const sendCart = () => {
   userCartStore.sendCartToAPI();
+  showModal.value = true;
+  showToast.value = true;
+  setTimeout(() => {
+    showToast.value = false;
+  }, 3000);
 };
 
-const totalWithPromotion = computed(() => userCartStore.calculateTotalWithPromotion());
+const closeModal = () => {
+  showModal.value = false;
+  router.push({ name: "home" });
+};
+
+const totalWithPromotion = computed(() =>
+  userCartStore.calculateTotalWithPromotion()
+);
+
+const getProductImage = (productName) => {
+  const images = {
+    "แฮร์รี่ พอตเตอร์กับศิลาอาถรรพ์": "/images/image1.jpg",
+    "แฮร์รี่ พอตเตอร์กับห้องแห่งความลับ": "/images/image2.jpg",
+    "แฮร์รี่ พอตเตอร์กับนักโทษแห่งอัซคาบัน": "/images/image3.jpg",
+    "แฮร์รี่ พอตเตอร์กับถ้วยอัคนี": "/images/image4.jpg",
+    "แฮร์รี่ พอตเตอร์กับภาคีนกฟีนิกซ์": "/images/image5.jpg",
+    "แฮร์รี่ พอตเตอร์กับเจ้าชายเลือดผสม": "/images/image6.jpg",
+    "แฮร์รี่ พอตเตอร์กับเครื่องรางยมทูต": "/images/image7.jpg",
+  };
+  return images[productName] || "/images/image1.jpg";
+};
 </script>
 
 <template>
@@ -49,7 +77,11 @@ const totalWithPromotion = computed(() => userCartStore.calculateTotalWithPromot
               :key="index"
             >
               <div class="shrink-0">
-                <img class="w-48" :src="item.imageUrl" />
+                <img
+                  class="w-48 product-image"
+                  :src="getProductImage(item.name)"
+                  :alt="item.name"
+                />
               </div>
               <div class="flex flex-1 flex-col justify-between pl-4">
                 <div class="grid grid-cols-2 gap-6 relative">
@@ -107,11 +139,37 @@ const totalWithPromotion = computed(() => userCartStore.calculateTotalWithPromot
               <div>{{ totalWithPromotion.netTotal }}</div>
             </div>
             <button @click="sendCart" class="btn btn-primary w-full">
-              Post
+              ชำระเงิน
             </button>
           </div>
         </section>
       </div>
+      <div v-if="showToast" class="toast toast-end">
+        <div class="alert alert-success">
+          <span>✅ Post API สำเร็จ!</span>
+        </div>
+      </div>
+
+      <div
+        v-if="showModal"
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      >
+        <div class="bg-base-100 p-10 rounded-lg shadow-xl text-center w-2/3">
+          <h2 class="text-3xl font-bold text-green-600">การชำระเงินสำเร็จ</h2>
+          <p class="mt-4 text-lg">ขอบคุณที่สั่งซื้อสินค้า</p>
+          <button @click="closeModal" class="btn btn-primary mt-6">
+            กลับไปหน้าหลัก
+          </button>
+        </div>
+      </div>
     </div>
   </UserLayout>
 </template>
+<style scoped>
+.product-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+</style>

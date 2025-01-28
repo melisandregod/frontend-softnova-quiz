@@ -23,7 +23,7 @@ const handleSearch = (event) => {
 <template>
   <div class="container mx-auto">
     <!-- header -->
-    <div class="navbar bg-base-100">
+    <div class="navbar bg-base-100 ">
       <RouterLink :to="{ name: 'home' }" class="flex-1">
         <a class="btn btn-ghost text-xl">บ้านนายดิน</a>
       </RouterLink>
@@ -38,7 +38,7 @@ const handleSearch = (event) => {
             @keyup="handleSearch"
           />
         </div>
-        <div class="dropdown dropdown-end">
+        <div class="dropdown dropdown-end z-[1050]">
           <label tabindex="0" class="btn btn-ghost btn-circle">
             <div class="indicator">
               <svg
@@ -69,7 +69,7 @@ const handleSearch = (event) => {
                 >{{ userCartStore.quantity }} Items</span
               >
               <span class="text-info"
-                >Subtotal: {{ userCartStore.summaryPrice }} ฿</span
+                >Total: {{ userCartStore.quantity }} </span
               >
               <div class="card-actions">
                 <RouterLink :to="{ name: 'cart' }" class="btn btn-primary btn-block">
@@ -87,26 +87,6 @@ const handleSearch = (event) => {
 
     <!-- footer -->
     <footer class="footer bg-neutral text-neutral-content p-10">
-      <nav>
-        <h6 class="footer-title">Services</h6>
-        <a class="link link-hover">Branding</a>
-        <a class="link link-hover">Design</a>
-        <a class="link link-hover">Marketing</a>
-        <a class="link link-hover">Advertisement</a>
-      </nav>
-      <nav>
-        <h6 class="footer-title">Company</h6>
-        <a class="link link-hover">About us</a>
-        <a class="link link-hover">Contact</a>
-        <a class="link link-hover">Jobs</a>
-        <a class="link link-hover">Press kit</a>
-      </nav>
-      <nav>
-        <h6 class="footer-title">Legal</h6>
-        <a class="link link-hover">Terms of use</a>
-        <a class="link link-hover">Privacy policy</a>
-        <a class="link link-hover">Cookie policy</a>
-      </nav>
     </footer>
   </div>
 </template>
